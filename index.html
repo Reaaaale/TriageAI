@@ -4,39 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Code Prediction</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Predizione del codice colore dei pazienti in PS</h1>
-    <form id="Prediction-form">
-        <label for="Frequenza cardiaca">Frequenza Cardiaca:</label>
-        <input type="number" id="Frequenza Cardiaca" name="frequenza_cardiaca" required><br><br>
-
-        <label for="Frequenza respiratoria">Frequenza respiratoria:</label>
-        <input type="number" id="Frequenza respiratoria" name="frequenza_respiratoria" required><br><br>
-
-        <label for="Temperatura">Temperatura:</label>
-        <input type="number" id="Temperatura" name="temperatura" required><br><br>
-
-        <label for="Saturazione Ossigeno">Saturazione Ossigeno:</label>
-        <input type="number" id="Saturazione Ossigeno" name="saturazione_ossigeno" required><br><br>
-
-        <label for="dolore">Scala del Dolore:</label>
-        <input type="number" id="dolore" name="dolore" required><br><br>
-
-        <label for="stato_coscienza">Stato di Coscienza:</label>
-        <input type="number" id="stato_coscienza" name="stato_coscienza" required><br><br>
-
-        <label for="pressione_sistolica">Pressione Sistolica:</label>
-        <input type="number" id="pressione_sistolica" name="pressione_sistolica" required><br><br>
-
-        <label for="pressione_diastolica">Pressione Diastolica:</label>
-        <input type="number" id="pressione_diastolica" name="pressione_diastolica" required><br><br>
-
-
-        <button type="submit">Predici</button>
-    </form>
+<style>
+    .input-group {
+        transition: all 0.3s ease;
+    }
     
-    <h2 id="Results"></h2>
+    .input-group:hover {
+        transform: translateX(10px);
+    }
+    
+    .form-input {
+        transition: all 0.2s ease;
+        border: 2px solid #e2e8f0;
+    }
+    
+    .form-input:focus {
+        border-color: #4299e1;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+    }
+    
+    .submit-button {
+        transition: all 0.3s ease;
+    }
+    
+    .submit-button:hover {
+        transform: translateY(-2px);
+    }
+    
+    .result-card {
+        transition: all 0.5s ease;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .result-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Sistema di Triage ML</h1>
+            <p class="text-gray-600 text-lg">Predizione automatica del codice colore basata su parametri vitali</p>
+        </header>
+
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8">
+            <form id="prediction-form" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="frequenza_cardiaca">
+                            Frequenza Cardiaca
+                        </label>
+                        <input type="number" id="frequenza_cardiaca" 
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="frequenza_respiratoria">
+                            Frequenza Respiratoria
+                        </label>
+                        <input type="number" id="frequenza_respiratoria" 
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="temperatura">
+                            Temperatura
+                        </label>
+                        <input type="number" id="temperatura" step="0.1"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="saturazione_ossigeno">
+                            Saturazione Ossigeno
+                        </label>
+                        <input type="number" id="saturazione_ossigeno"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="dolore">
+                            Scala del Dolore (1-10)
+                        </label>
+                        <input type="number" id="dolore" min="1" max="10"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="stato_coscienza">
+                            Stato di Coscienza (GCS)
+                        </label>
+                        <input type="number" id="stato_coscienza" min="3" max="15"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="pressione_sistolica">
+                            Pressione Sistolica
+                        </label>
+                        <input type="number" id="pressione_sistolica"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="pressione_diastolica">
+                            Pressione Diastolica
+                        </label>
+                        <input type="number" id="pressione_diastolica"
+                               class="form-input w-full px-4 py-2 rounded-lg" required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button type="submit" 
+                            class="submit-button bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Calcola Predizione
+                    </button>
+                </div>
+            </form>
+
+            <div id="result" class="result-card mt-8 p-6 rounded-lg hidden">
+                <h2 class="text-2xl font-bold mb-4">Risultato Predizione:</h2>
+                <div id="prediction-result" class="text-center p-4 rounded-lg text-white font-bold text-xl">
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <script>
