@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Code Prediction</title>
+</head>
+<body>
+    <h1>Predizione del codice colore dei pazienti in PS</h1>
+    <form id="Prediction-form">
+        <label for="Frequenza cardiaca">Frequenza Cardiaca:</label>
+        <input type="number" id="Frequenza Cardiaca" name="frequenza_cardiaca" required><br><br>
+
+        <label for="Frequenza respiratoria">Frequenza respiratoria:</label>
+        <input type="number" id="Frequenza respiratoria" name="frequenza_respiratoria" required><br><br>
+
+        <label for="Temperatura">Temperatura:</label>
+        <input type="number" id="Temperatura" name="temperatura" required><br><br>
+
+        <label for="Saturazione Ossigeno">Saturazione Ossigeno:</label>
+        <input type="number" id="Saturazione Ossigeno" name="saturazione_ossigeno" required><br><br>
+
+        <label for="dolore">Scala del Dolore:</label>
+        <input type="number" id="dolore" name="dolore" required><br><br>
+
+        <label for="stato_coscienza">Stato di Coscienza:</label>
+        <input type="number" id="stato_coscienza" name="stato_coscienza" required><br><br>
+
+        <label for="pressione_sistolica">Pressione Sistolica:</label>
+        <input type="number" id="pressione_sistolica" name="pressione_sistolica" required><br><br>
+
+        <label for="pressione_diastolica">Pressione Diastolica:</label>
+        <input type="number" id="pressione_diastolica" name="pressione_diastolica" required><br><br>
+
+
+        <button type="submit">Predici</button>
+    </form>
+    
+    <h2 id="Results"></h2>
+
+
+    <script>
+       document.getElementById("prediction-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Evita il ricaricamento della pagina
+
+
+            const data = {
+                frequenza_cardiaca: document.getElementById('Frequenza Cardiaca').value,
+                frequenza_respiratoria: document.getElementById('Frequenza respiratoria').value,
+                temperatura: document.getElementById('Temperatura').value,
+                saturazione_ossigeno: document.getElementById('Saturazione Ossigeno').value,
+                dolore: document.getElementById('dolore').value,
+                stato_coscienza: document.getElementById('stato_coscienza').value,
+                pressione_sistolica: document.getElementById('pressione_sistolica').value,
+                pressione_diastolica: document.getElementById('pressione_diastolica').value,
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+                const result = await response.json();
+                document.getElementById('Results').innerText = `Il codice colore del paziente è: ${result.prediction}`; 
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('Results').innerText = 'Errore durante la predizione';
+            }
+        });    
+    </script>
+</body>
+</html>
