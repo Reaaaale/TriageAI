@@ -18,17 +18,18 @@ app.get('/', (req, res) => {
 app.post("/predict", (req, res) => {
   const {
     frequenza_cardiaca,
+    pressione_sistolica,
+    pressione_diastolica,
     frequenza_respiratoria,
     temperatura,
     saturazione_ossigeno,
     dolore,
-    stato_coscienza,
-    pressione_sistolica,
-    pressione_diastolica
+    stato_coscienza
 } = req.body;
 
-const command = 'python3 inferenza.py  ${frequenza_cardiaca} ${frequenza_respiratoria} ${temperatura} ${saturazione_ossigeno} ${dolore} ${stato_coscienza} ${pressione_sistolica} ${pressione_diastolica}';
-exec (command, (error,stout ,stderr) => {
+const command = `py inferenza.py ${frequenza_cardiaca} ${pressione_sistolica} ${pressione_diastolica} ${frequenza_respiratoria} ${temperatura} ${saturazione_ossigeno} ${dolore} ${stato_coscienza}`;
+
+exec (command, (error, stdout ,stderr) => {
   if (error) {
     console.error(`exec error: ${error.message}`);
   
