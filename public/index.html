@@ -1,49 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Color Code Prediction</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Code Prediction</title>
+    <!-- Importa TailwindCSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Importa il file CSS personalizzato -->
+    <link href="styles/styles.css" rel="stylesheet">
 </head>
-<style>
-    .input-group {
-        transition: all 0.3s ease;
-    }
-
-    .input-group:hover {
-        transform: translateX(10px);
-    }
-
-    .form-input {
-        transition: all 0.2s ease;
-        border: 2px solid #e2e8f0;
-    }
-
-    .form-input:focus {
-        border-color: #4299e1;
-        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-    }
-
-    .submit-button {
-        transition: all 0.3s ease;
-    }
-
-    .submit-button:hover {
-        transform: translateY(-2px);
-    }
-
-    .result-card {
-        transition: all 0.5s ease;
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    .result-card.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <header class="text-center mb-12">
@@ -140,58 +105,7 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById("prediction-form").addEventListener("submit", async (event) => {
-            event.preventDefault(); // Evita il ricaricamento della pagina
-
-            // Raccogli i dati dal form
-            const data = {
-                frequenza_cardiaca: document.getElementById('frequenza_cardiaca').value,
-                pressione_sistolica: document.getElementById('pressione_sistolica').value,
-                pressione_diastolica: document.getElementById('pressione_diastolica').value,
-                frequenza_respiratoria: document.getElementById('frequenza_respiratoria').value,
-                temperatura: document.getElementById('temperatura').value,
-                saturazione_ossigeno: document.getElementById('saturazione_ossigeno').value,
-                dolore: document.getElementById('dolore').value,
-                stato_coscienza: document.getElementById('stato_coscienza').value,
-                
-                
-            };
-
-            try {
-                const response = await fetch("http://localhost:3000/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                });
-                const result = await response.json();
-
-                // Mostra il risultato
-                const resultDiv = document.getElementById("result");
-                resultDiv.classList.remove("hidden");
-                document.getElementById("prediction-result").innerText = `Il codice colore predetto è: ${result.prediction}`;
-
-                // Mostra il modale di conferma
-                document.getElementById("confirmModal").classList.remove("hidden");
-
-                // Gestione salvataggio
-                document.getElementById("saveYes").onclick = () => {
-                    const queryString = `?data=${encodeURIComponent(
-                        JSON.stringify(data)
-                    )}&prediction=${result.prediction}`;
-                    window.location.href = `summary.html${queryString}`;
-                };
-
-                document.getElementById("saveNo").onclick = () => {
-                    document.getElementById("confirmModal").classList.add("hidden");
-                };
-
-            } catch (error) {
-                console.error("Errore:", error);
-                document.getElementById("prediction-result").innerText = "Errore durante la predizione.";
-                document.getElementById("result").classList.remove("hidden");
-            }
-        });
-    </script>
+    <!-- Importa il file JavaScript -->
+    <script src="scripts/main.js"></script>
 </body>
 </html>
