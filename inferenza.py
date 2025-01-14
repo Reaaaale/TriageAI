@@ -27,7 +27,7 @@ class NeuralNet(nn.Module):
         out = self.fc3(out)
         return out
 
-# Parametri del modello
+# Parametri del modello prova
 input_size = 8
 hidden_size1 = 64
 hidden_size2 = 32
