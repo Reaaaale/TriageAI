@@ -37,11 +37,11 @@ output_size = 5
 model = NeuralNet(input_size, hidden_size1, hidden_size2, output_size)
 
 # Carica i pesi del modello salvati
-model.load_state_dict(torch.load('best_model.pth', map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('src/models/best_model.pth', map_location=torch.device('cpu')))
 model.eval()  # Metti il modello in modalità valutazione
 
 # Carica lo scaler salvato
-scaler = joblib.load('scaler.pkl')
+scaler = joblib.load('src/models/scaler.pkl')
 
 # Mappa delle classi
 labels = ['Rosso', 'Arancione', 'Giallo', 'Verde', 'Blu']

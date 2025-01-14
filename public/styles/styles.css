@@ -1,0 +1,36 @@
+.input-group {
+    transition: all 0.3s ease;
+}
+
+.input-group:hover {
+    transform: translateX(10px);
+}
+
+.form-input {
+    transition: all 0.2s ease;
+    border: 2px solid #e2e8f0;
+}
+
+.form-input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.submit-button {
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+}
+
+.result-card {
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.result-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
