@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riepilogo Dati</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Riepilogo dei Dati</h1>
+            <p class="text-gray-600">Conferma i dati del paziente e salva le informazioni.</p>
+        </header>
+
+        <div id="summaryContent" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <!-- Il riepilogo verrà generato dinamicamente -->
+        </div>
+
+        <form id="saveDataForm" class="bg-white rounded-lg shadow-lg p-6">
+            <label class="block mb-2 font-bold">Codice Colore Assegnato:</label>
+            <input type="text" id="codiceColoreAssegnato" class="form-input mb-4 w-full px-4 py-2 rounded-lg border" required>
+
+            <label class="block mb-2 font-bold">Motivo:</label>
+            <textarea id="motivo" class="form-input mb-4 w-full px-4 py-2 rounded-lg border" rows="4" required></textarea>
+
+            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                Salva
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Recupera i dati passati tramite query string
+        const params = new URLSearchParams(window.location.search);
+    
+        // Rendi visibili i dati nella pagina
+        const summaryContent = document.getElementById('summaryContent');
+        const data = JSON.parse(decodeURIComponent(params.get('data')));
+        const prediction = params.get('prediction');
+        let content = `
+            <p><strong>Frequenza Cardiaca:</strong> ${data.frequenza_cardiaca}</p>
+            <p><strong>Frequenza Respiratoria:</strong> ${data.frequenza_respiratoria}</p>
+            <p><strong>Temperatura:</strong> ${data.temperatura}</p>
+            <p><strong>Saturazione Ossigeno:</strong> ${data.saturazione_ossigeno}</p>
+            <p><strong>Scala del Dolore:</strong> ${data.dolore}</p>
+            <p><strong>Stato di Coscienza:</strong> ${data.stato_coscienza}</p>
+            <p><strong>Pressione Sistolica:</strong> ${data.pressione_sistolica}</p>
+            <p><strong>Pressione Diastolica:</strong> ${data.pressione_diastolica}</p>
+            <p><strong>Codice Predetto:</strong> ${prediction}</p>
+        `;
+        summaryContent.innerHTML = content;
+    
+        // Gestione del salvataggio dei dati
+        document.getElementById("saveDataForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            const codiceColoreAssegnato = document.getElementById("codiceColoreAssegnato").value;
+            const motivo = document.getElementById("motivo").value;
+    
+            try {
+                const response = await fetch("http://localhost:3000/save", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ...data, predizione_algoritmo: prediction, codiceColoreAssegnato, motivo }),
+                });
+    
+                if (response.ok) {
+                    alert("Dati salvati con successo!");
+                    window.location.href = '/';
+                } else {
+                    alert("Errore durante il salvataggio dei dati.");
+                }
+            } catch (error) {
+                console.error("Errore:", error);
+                alert("Errore durante il salvataggio");
+            }
+        });
+    </script>
+</body>
+</html>

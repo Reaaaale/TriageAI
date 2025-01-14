@@ -10,35 +10,35 @@
     .input-group {
         transition: all 0.3s ease;
     }
-    
+
     .input-group:hover {
         transform: translateX(10px);
     }
-    
+
     .form-input {
         transition: all 0.2s ease;
         border: 2px solid #e2e8f0;
     }
-    
+
     .form-input:focus {
         border-color: #4299e1;
         box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
     }
-    
+
     .submit-button {
         transition: all 0.3s ease;
     }
-    
+
     .submit-button:hover {
         transform: translateY(-2px);
     }
-    
+
     .result-card {
         transition: all 0.5s ease;
         opacity: 0;
         transform: translateY(20px);
     }
-    
+
     .result-card.visible {
         opacity: 1;
         transform: translateY(0);
@@ -54,6 +54,7 @@
         <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8">
             <form id="prediction-form" class="space-y-6">
                 <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Campi di input -->
                     <div>
                         <label class="block text-gray-700 text-sm font-semibold mb-2" for="frequenza_cardiaca">
                             Frequenza Cardiaca
@@ -119,10 +120,22 @@
                 </div>
             </form>
 
+            <!-- Risultato -->
             <div id="result" class="hidden mt-8 p-6 rounded-lg">
                 <h2 class="text-2xl font-bold mb-4">Risultato Predizione:</h2>
                 <div id="prediction-result" class="text-center p-4 rounded-lg text-white font-bold text-xl bg-green-500">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale di conferma -->
+    <div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+            <h2 class="text-xl font-bold mb-4">Vuoi salvare i dati?</h2>
+            <div class="flex justify-end">
+                <button id="saveYes" class="bg-blue-500 text-white px-4 py-2 rounded-lg mr-4 hover:bg-blue-600">Sì</button>
+                <button id="saveNo" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">No</button>
             </div>
         </div>
     </div>
@@ -134,13 +147,15 @@
             // Raccogli i dati dal form
             const data = {
                 frequenza_cardiaca: document.getElementById('frequenza_cardiaca').value,
+                pressione_sistolica: document.getElementById('pressione_sistolica').value,
+                pressione_diastolica: document.getElementById('pressione_diastolica').value,
                 frequenza_respiratoria: document.getElementById('frequenza_respiratoria').value,
                 temperatura: document.getElementById('temperatura').value,
                 saturazione_ossigeno: document.getElementById('saturazione_ossigeno').value,
                 dolore: document.getElementById('dolore').value,
                 stato_coscienza: document.getElementById('stato_coscienza').value,
-                pressione_sistolica: document.getElementById('pressione_sistolica').value,
-                pressione_diastolica: document.getElementById('pressione_diastolica').value,
+                
+                
             };
 
             try {
@@ -155,6 +170,22 @@
                 const resultDiv = document.getElementById("result");
                 resultDiv.classList.remove("hidden");
                 document.getElementById("prediction-result").innerText = `Il codice colore predetto è: ${result.prediction}`;
+
+                // Mostra il modale di conferma
+                document.getElementById("confirmModal").classList.remove("hidden");
+
+                // Gestione salvataggio
+                document.getElementById("saveYes").onclick = () => {
+                    const queryString = `?data=${encodeURIComponent(
+                        JSON.stringify(data)
+                    )}&prediction=${result.prediction}`;
+                    window.location.href = `summary.html${queryString}`;
+                };
+
+                document.getElementById("saveNo").onclick = () => {
+                    document.getElementById("confirmModal").classList.add("hidden");
+                };
+
             } catch (error) {
                 console.error("Errore:", error);
                 document.getElementById("prediction-result").innerText = "Errore durante la predizione.";
