@@ -89,5 +89,4 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 2. Clicca su **Calcola Predizione** per ottenere il codice colore predetto.
 3. Conferma il salvataggio dei dati nel database.
 
-## Licenza
-Questo progetto è distribuito sotto la licenza MIT. Vedi il file [LICENSE](LICENSE) per i dettagli.
+
